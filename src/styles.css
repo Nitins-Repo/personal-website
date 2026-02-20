@@ -100,22 +100,34 @@ a[href^="tel:"]:hover,a[href^="tel:"]:focus{color:inherit;text-decoration:underl
 /* Tag pill styling */
 .tag{display:inline-block;padding:.18rem .6rem;margin-right:.4rem;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);font-size:.85rem}
 
-/* Blog post styles */
+/* Blog post styles (updated per request) */
 .blog-entries{margin-top:1rem}
-.blog-entry{background:transparent;padding:0;margin:0}
+.blog-entry{max-width:none;width:100%;margin:0;padding:0 1rem;background:transparent;line-height:1.65}
+@media(min-width:900px){.blog-entry{padding:0}}
+
+/* Optional utility to make a post full-bleed (edge-to-edge viewport) */
+.blog-entry--fullbleed{width:100vw;max-width:100vw;margin-left:calc((100% - 100vw)/2);margin-right:calc((100% - 100vw)/2);padding-left:1rem;padding-right:1rem}
 .post-header{margin:1rem 0 0}
-.post-header h1{font-size:1.6rem;margin:.25rem 0;color:var(--text)}
-.post-subtitle{color:var(--muted);margin:0 0 1rem;font-size:0.95rem}
-.post-content{padding:0;margin:0 0 .9rem;line-height:1.6}
-.post-intro{margin:0 0 .9rem}
-.post-content p{margin:0 0 .9rem}
-.post-section{margin:0 0 .9rem}
-.post-section h2{font-size:1.1rem;margin:0 0 .4rem}
-.post-section p{margin:0}
+.post-header h1{font-size:2rem;margin:.25rem 0 0;color:var(--text);line-height:1.15}
+.post-subtitle{color:var(--muted);margin:0 0 1rem;font-size:1rem}
+.post-content{padding:0;margin:0 0 1.25rem;line-height:1.65;text-align:left}
+.post-intro{margin:0 0 0.5rem;font-size:1.0625rem;color:var(--muted);line-height:1.6}
+.post-intro p{margin-bottom:1rem}
+.post-content p{margin-top:0.25rem;margin-bottom:0}
+.post-section{margin-top:1.25rem}
+.post-section h2{margin-top:0;margin-bottom:0.4rem}
+.post-section p{margin-top:0.25rem;margin-bottom:0}
+
+.post-content blockquote{margin:1rem 0;padding-left:1rem;border-left:4px solid rgba(255,255,255,0.06);color:var(--muted);font-style:italic}
+.input,
+textarea{ }
+input,textarea{width:100%;padding:.6rem .75rem;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text)}
+input:focus,textarea:focus{outline:3px solid rgba(96,165,250,0.12);outline-offset:2px}
+.btn.primary{background:var(--accent);color:#071024;padding:.6rem 1rem;border-radius:8px;border:none}
 
 .entry-separator{
 	border:0;
 	height:2px;
-	background:linear-gradient(90deg,transparent,rgba(154,169,187,0.18),transparent);
-	margin:2rem 0;
+	background:linear-gradient(90deg,transparent,rgba(154,169,187,0.12),transparent);
+	margin:0.75rem 0;
 }
