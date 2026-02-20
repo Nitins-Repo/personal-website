@@ -99,3 +99,23 @@ a[href^="tel:"]:hover,a[href^="tel:"]:focus{color:inherit;text-decoration:underl
 
 /* Tag pill styling */
 .tag{display:inline-block;padding:.18rem .6rem;margin-right:.4rem;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);font-size:.85rem}
+
+/* Blog post styles */
+.blog-entries{margin-top:1rem}
+.blog-entry{background:transparent;padding:0;margin:0}
+.post-header{margin:1rem 0 0}
+.post-header h1{font-size:1.6rem;margin:.25rem 0;color:var(--text)}
+.post-subtitle{color:var(--muted);margin:0 0 1rem;font-size:0.95rem}
+.post-content{padding:0;margin:0 0 .9rem;line-height:1.6}
+.post-intro{margin:0 0 .9rem}
+.post-content p{margin:0 0 .9rem}
+.post-section{margin:0 0 .9rem}
+.post-section h2{font-size:1.1rem;margin:0 0 .4rem}
+.post-section p{margin:0}
+
+.entry-separator{
+	border:0;
+	height:2px;
+	background:linear-gradient(90deg,transparent,rgba(154,169,187,0.18),transparent);
+	margin:2rem 0;
+}
