@@ -52,6 +52,9 @@ a{color:var(--accent)}
 /* Small utility */
 .muted{color:var(--muted)}
 
+/* Utility: margin top 1.5rem (used by some pages) */
+.mt-1-5{margin-top:1.5rem}
+
 /* Focus states */
 /* Stronger, more visible focus styles for keyboard users */
 :root{
