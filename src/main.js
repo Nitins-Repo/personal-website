@@ -67,4 +67,33 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 60);
     }
   });
+
+  // Build blog TOC dynamically if the TOC container is present
+  const tocList = document.getElementById('blog-toc-list');
+  if (tocList) {
+    const entries = document.querySelectorAll('.blog-entry');
+    entries.forEach((entry) => {
+      const h1 = entry.querySelector('h1');
+      if (!h1) return;
+      // slugify title
+      let slug = h1.textContent.trim().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+      const base = slug || 'post';
+      let unique = base;
+      let i = 1;
+      while (document.getElementById(unique)) { unique = base + '-' + i; i++; }
+      entry.id = unique;
+
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + unique;
+      a.textContent = h1.textContent.trim();
+      a.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        document.getElementById(unique).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        try { history.replaceState(null, '', '#' + unique); } catch (err) { /* ignore */ }
+      });
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+  }
 });
