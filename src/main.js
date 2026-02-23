@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const h1 = document.querySelector('h1');
   if (h1) h1.tabIndex = -1;
 
+  console.debug('[main.js] DOMContentLoaded');
   const toggle = document.getElementById('nav-toggle');
   const nav = document.getElementById('site-nav');
   if (toggle && nav) {
@@ -69,10 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Build blog TOC dynamically if the TOC container is present
+  try {
   const tocList = document.getElementById('blog-toc-list');
   if (tocList) {
     const entries = document.querySelectorAll('.blog-entry');
+      console.debug('[main.js] found', entries.length, '.blog-entry elements');
     entries.forEach((entry) => {
+        try {
       const h1 = entry.querySelector('h1');
       if (!h1) return;
       // slugify title
@@ -94,6 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       li.appendChild(a);
       tocList.appendChild(li);
+        } catch (errInner) {
+          console.error('[main.js] error building TOC item', errInner, entry);
+        }
     });
+  }
+  } catch (err) {
+    console.error('[main.js] error building TOC', err);
   }
 });
