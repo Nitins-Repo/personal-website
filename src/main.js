@@ -190,4 +190,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.closest('.blog-toc') || e.target.closest('#blog-toc-toggle')) return;
     closeTOC();
   });
+
+  // Open TOC when clicking an in-page link that targets an element inside the TOC (mobile)
+  document.body.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || !href.startsWith('#')) return;
+    const id = href.slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    if (toc.contains(target)) {
+      if (!toc.classList.contains('visible')) {
+        e.preventDefault();
+        openTOC();
+        setTimeout(() => {
+          const focusEl = toc.querySelector('a, button, [tabindex]') || target;
+          if (focusEl && typeof focusEl.focus === 'function') focusEl.focus();
+        }, 60);
+      }
+    }
+  });
 });
