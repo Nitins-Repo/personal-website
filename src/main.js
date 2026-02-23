@@ -1,5 +1,66 @@
 // Small UI behaviors: focus heading and mobile nav toggle
 document.addEventListener('DOMContentLoaded', () => {
+  // Ensure a consistent top navigation on non-home pages by inserting
+  // a canonical skip-link + header/nav when pages are missing or inconsistent.
+  try {
+    const isHome = !!document.querySelector('.hero');
+    if (!isHome) {
+      const canonical = [
+        '<a class="skip-link" href="#content">Skip to content</a>',
+        '<header class="site-header">',
+        '  <div class="nav-wrap">',
+        '    <a class="site-title" href="index.html">',
+        '      <img src="/src/logo.svg" alt="Nitin Garg logo" class="logo" />',
+        '      <span class="site-name">Nitin Garg</span>',
+        '    </a>',
+        '    <button id="nav-toggle" aria-expanded="false">Menu</button>',
+        '    <nav class="site-nav" aria-label="Main navigation">',
+        '      <ul>',
+        '        <li><a href="about.html">About Me</a></li>',
+        '        <li><a href="projects.html">Projects</a></li>',
+        '        <li><a href="skills.html">Skills</a></li>',
+        '        <li><a href="blog.html">Blog / Notes</a></li>',
+        '        <li><a href="contact.html">Contact</a></li>',
+        '      </ul>',
+        '    </nav>',
+        '  </div>',
+        '</header>'
+      ].join('\n');
+
+      const existingHeader = document.querySelector('header.site-header');
+      const existingSkip = document.querySelector('a.skip-link');
+
+      if (existingHeader) {
+        // If header lacks a proper nav or toggle, replace it with canonical markup
+        const hasNav = !!existingHeader.querySelector('.site-nav');
+        const hasToggle = !!document.getElementById('nav-toggle');
+        if (!hasNav || !hasToggle) {
+          if (existingSkip && existingSkip.parentNode) existingSkip.parentNode.removeChild(existingSkip);
+          existingHeader.outerHTML = canonical;
+        } else {
+          // Ensure skip-link appears before header
+          if (!existingSkip) {
+            existingHeader.insertAdjacentHTML('beforebegin', '<a class="skip-link" href="#content">Skip to content</a>');
+          } else {
+            const rel = existingSkip.compareDocumentPosition(existingHeader);
+            if (rel & Node.DOCUMENT_POSITION_FOLLOWING) {
+              existingHeader.parentNode.insertBefore(existingSkip, existingHeader);
+            }
+          }
+        }
+      } else {
+        // No header present — insert canonical just before main content or at body start
+        if (existingSkip && existingSkip.parentNode) existingSkip.parentNode.removeChild(existingSkip);
+        const content = document.getElementById('content');
+        if (content && content.parentNode) content.insertAdjacentHTML('beforebegin', canonical);
+        else document.body.insertAdjacentHTML('afterbegin', canonical);
+      }
+    }
+  } catch (err) {
+    /* If anything goes wrong, leave the page as-is and avoid breaking scripts */
+    console.warn('[main.js] nav normalization failed', err);
+  }
+
   const h1 = document.querySelector('h1');
   if (h1) h1.tabIndex = -1;
 
