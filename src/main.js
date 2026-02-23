@@ -133,3 +133,39 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('[main.js] error building TOC', err);
   }
 });
+
+// Mobile TOC toggle behavior
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('blog-toc-toggle');
+  const toc = document.querySelector('.blog-toc');
+  if (!toggle || !toc) return;
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'blog-toc-backdrop';
+
+  const openTOC = () => {
+    toc.classList.add('visible');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.appendChild(backdrop);
+  };
+
+  const closeTOC = () => {
+    toc.classList.remove('visible');
+    toggle.setAttribute('aria-expanded', 'false');
+    if (backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
+  };
+
+  toggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (toc.classList.contains('visible')) closeTOC(); else openTOC();
+  });
+
+  backdrop.addEventListener('click', closeTOC);
+
+  // Close when clicking outside toc (for devices without backdrop support)
+  document.addEventListener('click', (e) => {
+    if (!toc.classList.contains('visible')) return;
+    if (e.target.closest('.blog-toc') || e.target.closest('#blog-toc-toggle')) return;
+    closeTOC();
+  });
+});

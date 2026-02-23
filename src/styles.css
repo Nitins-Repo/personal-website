@@ -114,11 +114,33 @@ a[href^="tel:"]:hover,a[href^="tel:"]:focus{color:inherit;text-decoration:underl
 .blog-toc a{display:block;color:var(--muted);text-decoration:none;padding:.25rem .4rem;border-radius:6px}
 .blog-toc a:hover{color:var(--text);background:rgba(255,255,255,0.02)}
 
+/* Hidden post state and active link styling */
+.blog-entry.hidden{display:none}
+.blog-empty{color:var(--muted);padding:1.5rem;border-radius:8px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);margin-bottom:1rem}
+.blog-toc a.active{background:linear-gradient(90deg, rgba(96,165,250,0.08), rgba(125,211,252,0.04));color:var(--text);border-left:3px solid var(--accent);padding-left:.45rem}
+
+/* Emphasize TOC as primary on larger screens */
+@media(min-width:900px){
+	.blog-layout{grid-template-columns:300px 1fr}
+}
+
 @media(min-width:900px){
 	.blog-layout{display:grid;grid-template-columns:240px 1fr;gap:1.5rem;align-items:start}
 	.blog-toc{display:block;position:sticky;top:1.5rem;height:calc(100vh - 3rem);overflow:auto;padding-right:0.5rem}
 	.blog-toc ul{flex-direction:column}
 	.blog-toc a{padding:.35rem .5rem}
+}
+
+/* Mobile TOC toggle and off-canvas behavior */
+.mobile-only{display:inline-block}
+@media(min-width:900px){.mobile-only{display:none}}
+
+/* On small screens, TOC becomes off-canvas when visible */
+@media(max-width:899px){
+	.blog-toc{display:none;position:fixed;left:0;top:0;bottom:0;width:80%;max-width:320px;background:var(--surface);padding:1rem 0.75rem;box-shadow:2px 0 18px rgba(2,6,23,0.6);z-index:1200;overflow:auto}
+	.blog-toc.visible{display:block}
+	/* make the content area scroll behind a translucent backdrop when TOC open */
+	.blog-toc-backdrop{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(2,6,23,0.45);z-index:1100}
 }
 
 /* Optional utility to make a post full-bleed (edge-to-edge viewport) */
