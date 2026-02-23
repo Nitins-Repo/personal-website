@@ -9,17 +9,23 @@
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body>
-    <a class="skip-link" href="#content">
-      Skip to content
-    </a>
+    <a class="skip-link" href="#content">Skip to content</a>
     <header class="site-header">
       <div class="nav-wrap">
         <a class="site-title" href="index.html">
           <img src="/src/logo.svg" alt="Nitin Garg logo" class="logo" />
-          <span class="site-name">
-            Nitin Garg
-          </span>
+          <span class="site-name">Nitin Garg</span>
         </a>
+        <button id="nav-toggle" aria-expanded="false">Menu</button>
+        <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+          <ul>
+            <li><a href="about.html">About Me</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="skills.html">Skills</a></li>
+            <li><a href="blog.html">Blog / Notes</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
       </div>
     </header>
     <main id="content" class="container">
