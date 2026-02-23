@@ -93,7 +93,19 @@ document.addEventListener('DOMContentLoaded', () => {
       post.classList.remove('hidden');
       if (linkEl) linkEl.classList.add('active');
       const empty = document.getElementById('blog-empty'); if (empty) empty.style.display = 'none';
-      setTimeout(() => post.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
+      setTimeout(() => {
+        post.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // If the mobile TOC is open, close it so the content is on top.
+        const mobileToc = document.querySelector('.blog-toc');
+        if (mobileToc && mobileToc.classList.contains('visible')) {
+          mobileToc.classList.remove('visible');
+          const backdrop = document.querySelector('.blog-toc-backdrop');
+          if (backdrop && backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
+          const toggleBtn = document.getElementById('blog-toc-toggle');
+          if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      }, 40);
       try { history.replaceState(null, '', '#' + unique); } catch (err) { /* ignore */ }
     };
 
@@ -122,6 +134,16 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (errInner) {
         console.error('[main.js] error building TOC item', errInner, entry);
       }
+    });
+
+    // When the user clicks on the visible content area on small screens,
+    // move focus to the TOC toggle so it's easy to reopen the TOC.
+    document.addEventListener('click', (ev) => {
+      if (window.innerWidth >= 900) return; // desktop keeps TOC visible
+      const clickedInsidePost = !!ev.target.closest('.blog-entry');
+      if (!clickedInsidePost) return;
+      const toggleBtn = document.getElementById('blog-toc-toggle');
+      if (toggleBtn) toggleBtn.focus();
     });
 
     const initialHash = (location.hash || '').replace('#','');
