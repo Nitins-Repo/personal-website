@@ -4,17 +4,78 @@ document.addEventListener('DOMContentLoaded', () => {
   if (h1) h1.tabIndex = -1;
 
   const toggle = document.getElementById('nav-toggle');
-  const nav = document.getElementById('site-nav');
+  const nav = document.querySelector('.site-nav');
   if (toggle && nav) {
+    // Toggle open/close using a class so CSS can animate it
     toggle.addEventListener('click', () => {
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!expanded));
-      if (!expanded) {
-        nav.style.display = 'block';
+      nav.classList.toggle('open');
+      // Hide the toggle while the nav is visible to match requested behavior
+      if (nav.classList.contains('open')) {
+        toggle.style.display = 'none';
       } else {
-        nav.style.display = '';
+        toggle.style.display = '';
+      }
+      if (!expanded) {
+        // Move focus into the nav for keyboard users
+        const firstLink = nav.querySelector('a, button');
+        if (firstLink && typeof firstLink.focus === 'function') firstLink.focus();
       }
     });
+
+    // Close on outside click when open (mobile)
+    document.addEventListener('click', (e) => {
+      if (!nav.classList.contains('open')) return;
+      if (e.target.closest('.site-nav') || e.target.closest('#nav-toggle')) return;
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.style.display = '';
+    });
+
+    // Close with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('open')) {
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.style.display = '';
+        toggle.focus();
+      }
+    });
+
+    // When a nav link is clicked on small screens, close the nav to reveal content
+    nav.addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (a) return;
+      if (window.innerWidth < 700) {
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.style.display = '';
+      }
+    });
+
+    // Add a last "Close" entry to the nav for small screens so users can dismiss the menu
+    try {
+      const navUl = nav.querySelector('ul');
+      if (navUl && !document.getElementById('nav-close-btn')) {
+        const li = document.createElement('li');
+        li.className = 'nav-close';
+        const btn = document.createElement('button');
+        btn.id = 'nav-close-btn';
+        btn.type = 'button';
+        btn.className = 'nav-close-btn';
+        btn.textContent = 'Close';
+        btn.addEventListener('click', (evt) => {
+          evt.preventDefault();
+          nav.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.style.display = '';
+          try { toggle.focus(); } catch (err) { /* ignore */ }
+        });
+        li.appendChild(btn);
+        navUl.appendChild(li);
+      }
+    } catch (err) { /* ignore */ }
   }
 
   // Read more toggles for projects
@@ -68,6 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+
 
 // Build blog TOC dynamically (separate listener to avoid altering existing handlers)
 document.addEventListener('DOMContentLoaded', () => {
@@ -136,6 +199,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Show the first post by default on desktop (keep mobile behaviour unchanged)
+    if (!location.hash && window.innerWidth >= 900 && entries.length > 0) {
+      try {
+        const firstId = entries[0].id;
+        const firstLink = tocList.querySelector('a[data-post-id="' + firstId + '"]');
+        showPost(firstId, firstLink || null);
+      } catch (errShow) { /* ignore */ }
+    }
+
     // When the user clicks on the visible content area on small screens,
     // move focus to the TOC toggle so it's easy to reopen the TOC.
     document.addEventListener('click', (ev) => {
@@ -176,6 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.setAttribute('aria-expanded', 'false');
     if (backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
   };
+
+  
 
   toggle.addEventListener('click', (e) => {
     e.preventDefault();
