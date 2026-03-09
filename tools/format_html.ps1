@@ -8,10 +8,10 @@ function Format-File($path) {
     $content = Get-Content $path -Raw -Encoding UTF8
 
     # split into tags and text
-    $matches = [regex]::Matches($content, '(<[^>]+>)')
+    $tokenMatches = [regex]::Matches($content, '(<[^>]+>)')
     $tokens = @()
     $last = 0
-    foreach ($m in $matches) {
+    foreach ($m in $tokenMatches) {
         $idx = $m.Index
         if ($idx -gt $last) {
             $tokens += $content.Substring($last, $idx - $last)
@@ -55,7 +55,7 @@ function Format-File($path) {
         }
 
         if ($t -match '^<\s*([a-zA-Z0-9:-]+)') {
-            $tag = $matches= $null; $tag = $matches = $t -replace '^<\s*([a-zA-Z0-9:-]+).*','$1'
+            $tag = ($t -replace '^<\s*([a-zA-Z0-9:-]+).*','$1')
             $isVoid = ($t.TrimEnd().EndsWith('/>') -or ($voidTags -contains $tag.ToLower()))
             [void]$out.AppendLine((' ' * ($indent*2)) + $t.Trim())
             if (-not $isVoid) {
